@@ -1,0 +1,6 @@
+interface:
+  IAMixin
+
+clean :
+  black_hole mixin (PhysicsMixins)
+  Tests.ml
