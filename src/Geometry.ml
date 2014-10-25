@@ -34,7 +34,7 @@ let to_angle (sx, sy) =
   else if sy > 0. then
     3.141592 /. 2.
   else 
-    3.141592 /. 2.
+    -. 3.141592 /. 2.
 
 let norm2D (a,b) = sqrt (a *. a +. b *. b)
 

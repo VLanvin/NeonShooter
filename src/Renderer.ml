@@ -15,31 +15,31 @@ let create win =
   {pp_texture = new render_texture sx sy;
    target = win;
    bloomer = BloomEffect.create (sx, sy);
-   vao1 = new vertex_array ~primitive_type:PrimitiveType.Lines [];
-   vao2 = new vertex_array ~primitive_type:PrimitiveType.Quads []}
+   vao1 = new vertex_array ~primitive_type:Lines [];
+   vao2 = new vertex_array ~primitive_type:Quads []}
 
 let draw_line (rt : #render_target) origin ending color thickness = 
   new rectangle_shape ~position:origin 
     ~size:(distance2D ending origin, thickness) ~fill_color:color
     ~rotation:(to_deg (to_angle (diff2D ending origin))) ()
-  |> rt#draw ~blend_mode:BlendMode.BlendAdd
+  |> rt#draw ~blend_mode:BlendAdd
 
-let compute_thin_line vao origin ending color = OcsfmlGraphics.Vertex.(
-  vao#append (create ~position:origin ~color ());
-  vao#append (create ~position:ending ~color ()))
+let compute_thin_line vao origin ending color = 
+  vao#append (mk_vertex ~position:origin ~color ());
+  vao#append (mk_vertex ~position:ending ~color ())
 
-let compute_line vao origin ending color thickness = OcsfmlGraphics.Vertex.(
+let compute_line vao origin ending color thickness = 
   let vector = diff2D ending origin in
   let (nx, ny) = prop2D (1. /. (norm2D vector)) vector in
   let offset_vec = prop2D (thickness /. 2.) (ny, -.nx) in 
-  vao#append (create ~position:(add2D offset_vec origin) ~color ());
-  vao#append (create ~position:(add2D offset_vec ending) ~color ());
-  vao#append (create ~position:(diff2D ending offset_vec) ~color ());
-  vao#append (create ~position:(diff2D origin offset_vec) ~color ()))
+  vao#append (mk_vertex ~position:(add2D offset_vec origin) ~color ());
+  vao#append (mk_vertex ~position:(add2D offset_vec ending) ~color ());
+  vao#append (mk_vertex ~position:(diff2D ending offset_vec) ~color ());
+  vao#append (mk_vertex ~position:(diff2D origin offset_vec) ~color ())
 
 let draw_circle (rt : #render_target) position fill_color radius =
   new circle_shape ~position ~fill_color ~radius ()
-  |> rt#draw ~blend_mode:BlendMode.BlendAdd
+  |> rt#draw ~blend_mode:BlendAdd
 
 let render_grid (rt : #render_target) (g : WarpingGrid.t) vao1 vao2 =
   let pts = WarpingGrid.points g in
@@ -96,8 +96,8 @@ let render_grid (rt : #render_target) (g : WarpingGrid.t) vao1 vao2 =
       end
     done;
   done;
-  rt#draw ~blend_mode:BlendMode.BlendAdd vao1;
-  rt#draw ~blend_mode:BlendMode.BlendAdd vao2;
+  rt#draw ~blend_mode:BlendAdd vao1;
+  rt#draw ~blend_mode:BlendAdd vao2;
   vao1#clear; vao2#clear
 
 let render_particle (rt : #render_target) (p : #particle_base) = 
@@ -105,14 +105,14 @@ let render_particle (rt : #render_target) (p : #particle_base) =
     ~rotation:(to_deg p#orientation) 
     ~texture:(ImageLib.(get global_image_lib p#texture_name))
     ~color:p#color ~origin:p#origin ()
-  |> rt#draw ~blend_mode:BlendMode.BlendAdd
+  |> rt#draw ~blend_mode:BlendAdd
 
 let render_projectile (rt : #render_target) (p : #projectile_abstract) = 
   new sprite ~position:p#position ~scale:p#scale 
     ~rotation:(to_deg p#orientation) 
     ~texture:(ImageLib.(get global_image_lib p#texture_name))
     ~color:p#color ~origin:p#origin ()
-  |> rt#draw ~blend_mode:BlendMode.BlendAdd
+  |> rt#draw ~blend_mode:BlendAdd
 
 let render_ship (rt : #render_target) (p : #ShipMixins.base_ship) =
   new sprite ~position:p#position ~scale:p#scale
