@@ -14,5 +14,5 @@ void main()
   vec2 tc = gl_TexCoord[0].xy;
   vec4 bloom = AdjustSaturation(texture2D(blurred, tc), 1.5);
   vec4 base  = AdjustSaturation(texture2D(texture, tc), 0.3);
-  gl_FragColor = base * 2 + bloom * 2;
+  gl_FragColor = base * 2. + bloom * 2.;
 }
